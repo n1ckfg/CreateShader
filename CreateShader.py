@@ -46,22 +46,18 @@ def setRGBA(s,c):
 	g = float(c[1]) / 255.0
 	b = float(c[2]) / 255.0
 	a = abs(1-(float(c[3]) / 255.0))
-	cc = (r,g,b)
-	ct = (a,a,a)
-	setAttr(s + ".color", cc)
-	setAttr(s + ".transparency", ct)
+	setAttr(s + ".color", (r,g,b))
+	setAttr(s + ".transparency", (a,a,a))
 
 def setRGB(s,c):
 	r = float(c[0]) / 255.0
 	g = float(c[1]) / 255.0
 	b = float(c[2]) / 255.0
-	cc = (r,g,b)
-	setAttr(s + ".color", cc)
+	setAttr(s + ".color", (r,g,b))
 
 def setAlpha(s,c):
-	a = abs(1-(float(c[3]) / 255.0))
-	ct = (a,a,a)
-	setAttr(s + ".transparency", ct)	
+	a = abs(1-(float(c) / 255.0))
+	setAttr(s + ".transparency", (a,a,a))	
 
 def keyAlpha(shader):
 	mel.eval("setKeyframe { \"" + shader + ".it\" };")	
