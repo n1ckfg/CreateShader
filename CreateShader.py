@@ -30,11 +30,14 @@ def assignShader(shader):
 	hyperShade(a=shader)
 
 def quickShader(shaderType,shaderColor,useTexture):
-	shader = initShader(shaderType,shaderColor,useTexture)
+	shader = createShader(shaderType,shaderColor,useTexture)
 	assignShader(shader)
 
 def setColor(s,c):
 	cc = (float(c[0]) / 255.0, float(c[1]) / 255.0, float(c[2]) / 255.0)
+	ct = (float(c[3]) / 255.0, float(c[3]) / 255.0, float(c[3]) / 255.0)
 	setAttr(s + ".color", cc)
+	if(len(c)>3):
+		setAttr(s + ".transparency", ct)
 
-quickShader("blinn",(255,0,0),False)
+quickShader("blinn",[255,0,0,100],False)
