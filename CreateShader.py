@@ -29,14 +29,26 @@ def createShader(shaderType,shaderColor,useTexture):
 def assignShader(shader):
 	hyperShade(a=shader)
 
+def getShader():
+	# get shapes of selection:
+	shapesInSel = ls(dag=1,o=1,s=1,sl=1)
+	# get shading groups from shapes:
+	shadingGrps = listConnections(shapesInSel,type='shadingEngine')
+	# get the shaders:
+	shader = ls(listConnections(shadingGrps),materials=1)
+	return shader[0] 
+
 def quickShader(shaderType,shaderColor,useTexture):
 	shader = createShader(shaderType,shaderColor,useTexture)
 	assignShader(shader)
 
 def setColor(s,c):
-	cc = (float(c[0]) / 255.0, float(c[1]) / 255.0, float(c[2]) / 255.0)
-	t = abs(1-(float(c[3]) / 255.0))
-	ct = (t,t,t)
+	r = float(c[0]) / 255.0
+	g = float(c[1]) / 255.0
+	b = float(c[2]) / 255.0
+	a = abs(1-(float(c[3]) / 255.0))
+	cc = (r,g,b)
+	ct = (a,a,a)
 	setAttr(s + ".color", cc)
 	if(len(c)>3):
 		setAttr(s + ".transparency", ct)
