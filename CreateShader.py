@@ -1,5 +1,7 @@
 from maya.cmds import *
 from pymel.core import *
+import maya.mel as mel
+from random import uniform as rnd
 
 def createShader(shaderType,shaderColor,useTexture):
 	#1. get selection
@@ -12,10 +14,7 @@ def createShader(shaderType,shaderColor,useTexture):
 	#4. create a shading group
 	shading_group= sets(renderable=True,noSurfaceShader=True,empty=True)
 	#5. set the color
-	try:
-		setColor(shader,shaderColor)
-	except:
-		setColor(shader,(0.5,0.5,0.5))
+	setRGBA(shader,shaderColor)
 	#6. connect shader to sg surface shader
 	connectAttr('%s.outColor' %shader ,'%s.surfaceShader' %shading_group)
 	#7. connect file texture node to shader's color
@@ -42,7 +41,7 @@ def quickShader(shaderType,shaderColor,useTexture):
 	shader = createShader(shaderType,shaderColor,useTexture)
 	assignShader(shader)
 
-def setColor(s,c):
+def setRGBA(s,c):
 	r = float(c[0]) / 255.0
 	g = float(c[1]) / 255.0
 	b = float(c[2]) / 255.0
@@ -50,7 +49,21 @@ def setColor(s,c):
 	cc = (r,g,b)
 	ct = (a,a,a)
 	setAttr(s + ".color", cc)
-	if(len(c)>3):
-		setAttr(s + ".transparency", ct)
+	setAttr(s + ".transparency", ct)
+
+def setRGB(s,c):
+	r = float(c[0]) / 255.0
+	g = float(c[1]) / 255.0
+	b = float(c[2]) / 255.0
+	cc = (r,g,b)
+	setAttr(s + ".color", cc)
+
+def setAlpha(s,c):
+	a = abs(1-(float(c[3]) / 255.0))
+	ct = (a,a,a)
+	setAttr(s + ".transparency", ct)	
+
+def keyAlpha(shader):
+	mel.eval("setKeyframe { \"" + shader + ".it\" };")	
 
 quickShader("blinn",[255,0,0,100],False)
