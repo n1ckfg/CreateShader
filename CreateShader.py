@@ -35,7 +35,8 @@ def quickShader(shaderType,shaderColor,useTexture):
 
 def setColor(s,c):
 	cc = (float(c[0]) / 255.0, float(c[1]) / 255.0, float(c[2]) / 255.0)
-	ct = (float(c[3]) / 255.0, float(c[3]) / 255.0, float(c[3]) / 255.0)
+	t = abs(1-(float(c[3]) / 255.0))
+	ct = (t,t,t)
 	setAttr(s + ".color", cc)
 	if(len(c)>3):
 		setAttr(s + ".transparency", ct)
