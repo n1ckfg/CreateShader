@@ -59,6 +59,14 @@ def setAlpha(s,c):
 	a = abs(1-(float(c) / 255.0))
 	setAttr(s + ".transparency", (a,a,a))	
 
+def getAlpha():
+	target = ls(sl=1)
+	select(target[0])
+	shader = getShader()
+	aa = getAttr(shader + ".transparency")
+	a = 255 * abs(1-aa[0])
+	return a
+
 def keyAlpha(c):
 	shader = getShader()
 	setAlpha(shader,c)
