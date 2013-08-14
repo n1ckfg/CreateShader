@@ -59,7 +59,9 @@ def setAlpha(s,c):
 	a = abs(1-(float(c) / 255.0))
 	setAttr(s + ".transparency", (a,a,a))	
 
-def keyAlpha(shader):
+def keyAlpha(c):
+	shader = getShader()
+	setAlpha(shader,c)
 	mel.eval("setKeyframe { \"" + shader + ".it\" };")	
 
 quickShader("blinn",[255,0,0,100],False)
