@@ -1,4 +1,3 @@
-from maya.cmds import *
 from pymel.core import *
 import maya.mel as mel
 from random import uniform as rnd
@@ -25,7 +24,7 @@ def createShader(shaderType,shaderColor,useTexture):
 	#10. return the completed shader
 	return shader
 
-def assignShader(shader):
+def setShader(shader):
 	hyperShade(a=shader)
 
 def getShader():
@@ -39,8 +38,12 @@ def getShader():
 
 def quickShader(shaderType,shaderColor,useTexture):
 	shader = createShader(shaderType,shaderColor,useTexture)
-	assignShader(shader)
+	setShader(shader)
+	return shader
 
+#~~
+
+#set RGBA, RGB, A at shader level
 def setRGBA(s,c):
 	r = float(c[0]) / 255.0
 	g = float(c[1]) / 255.0
@@ -55,21 +58,58 @@ def setRGB(s,c):
 	b = float(c[2]) / 255.0
 	setAttr(s + ".color", (r,g,b))
 
-def setAlpha(s,c):
+def setA(s,c):
 	a = abs(1-(float(c) / 255.0))
 	setAttr(s + ".transparency", (a,a,a))	
 
+#~~
+
+# set RGB color 0-255, any number of selections
+def setColor(c):
+	target = ls(sl=1)
+	for i in range(0,len(target)):
+		select(target[i])
+		s = getShader()
+		r = float(c[0]) / 255.0
+		g = float(c[1]) / 255.0
+		b = float(c[2]) / 255.0
+		setAttr(s + ".color", (r,g,b))		
+
+# returns RGB color 0-255 of first selection
+def getColor():
+	target = ls(sl=1)
+	select(target[0])
+	s = getShader()
+	c = getAttr(s + ".color")	
+	r = float(c[0]) / 255.0
+	g = float(c[1]) / 255.0
+	b = float(c[2]) / 255.0
+	return (r,g,b)
+#~~
+
+# set transparency 0-255, any number of selections
+def setAlpha(c):
+	target = ls(sl=1)
+	for i in range(0,len(target)):
+		select(target[i])
+		s = getShader()
+		a = abs(1-(float(c) / 255.0))
+		setAttr(s + ".transparency", (a,a,a))	
+
+# returns transparency 0-255 from first selection
 def getAlpha():
 	target = ls(sl=1)
 	select(target[0])
-	shader = getShader()
-	aa = getAttr(shader + ".transparency")
+	s = getShader()
+	aa = getAttr(s + ".transparency")
 	a = 255 * abs(1-aa[0])
 	return a
 
+# keyframe transparency 0-255, any number of selections
 def keyAlpha(c):
-	shader = getShader()
-	setAlpha(shader,c)
-	mel.eval("setKeyframe { \"" + shader + ".it\" };")	
-
-quickShader("blinn",[255,0,0,100],False)
+	target = ls(sl=1)
+	for i in range(0,len(target)):
+		select(target[i])
+		s = getShader()
+		setA(s,c)
+		mel.eval("setKeyframe { \"" + s + ".it\" };")	
